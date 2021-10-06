@@ -58,7 +58,7 @@ export default function Auth() {
 
   const signUp = () => {
     axios
-      .post("http://localhost:3000/api/signup", {
+      .post("/api/signup", {
         firstName,
         lastName,
         email,
