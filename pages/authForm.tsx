@@ -15,9 +15,12 @@ import axios from "axios";
 import router from "next/router";
 
 interface signInResponse {
-  error: string | null;
-  ok: boolean;
+  error: string | undefined;
+
   status: number;
+
+  ok: boolean;
+
   url: string | null;
 }
 
@@ -166,11 +169,15 @@ export default function Auth() {
                     password: password,
                     redirect: false,
                   }).then((res) => {
+                    //@ts-ignore
                     if (res?.error === null) {
                       return;
+                      //@ts-ignore
                     } else if (res?.error) {
                       setAreInvalid(true);
+                      return;
                     }
+                    return;
                   });
                 }
               }}
