@@ -4,10 +4,22 @@ import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Center, Heading, HStack, Text, VStack } from "@chakra-ui/layout";
 import { useEffect, useRef, useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { getSession, signIn, useSession } from "next-auth/react";
+import {
+  getSession,
+  signIn,
+  SignInResponse,
+  useSession,
+} from "next-auth/react";
 
 import axios from "axios";
 import router from "next/router";
+
+interface signInResponse {
+  error: string | null;
+  ok: boolean;
+  status: number;
+  url: string | null;
+}
 
 export default function Auth() {
   //tracking of the current session
@@ -145,18 +157,21 @@ export default function Auth() {
             </Button>
             <Button
               variant={isSignUp ? "link" : "solid"}
-              onClick={async () => {
+              onClick={() => {
                 if (isSignUp) {
                   setIsSignUp(false);
                 } else {
-                  await signIn("credentials", {
+                  signIn("credentials", {
                     email: email,
                     password: password,
                     redirect: false,
                   }).then((res) => {
-                    if (res.error === null) {
+                    console.log(res);
+                    //@ts-ignore
+                    if (res?.error === null) {
                       return;
-                    } else if (res.error) {
+                      //@ts-ignore
+                    } else if (res?.error) {
                       setAreInvalid(true);
                     }
                   });
