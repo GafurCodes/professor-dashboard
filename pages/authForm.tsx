@@ -2,33 +2,14 @@ import { Button, IconButton } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Center, Heading, HStack, Text, VStack } from "@chakra-ui/layout";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import {
-  getSession,
-  signIn,
-  SignInResponse,
-  useSession,
-} from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 
 import axios from "axios";
 import router from "next/router";
 
-interface signInResponse {
-  error: string | undefined;
-
-  status: number;
-
-  ok: boolean;
-
-  url: string | null;
-}
-
 export default function Auth() {
-  //tracking of the current session
-  const { status } = useSession();
-  console.log(status);
-
   //tracking whether the credentials are invalid
   const [areInvalid, setAreInvalid] = useState(false);
 
@@ -59,14 +40,15 @@ export default function Auth() {
       email: email,
       password: password,
       redirect: false,
-    }).then((res: any) => {
-      if (res?.error === null) {
-        setAreInvalid(false);
-        router.push("/");
-      } else if (res?.error) {
-        setAreInvalid(true);
-      }
     });
+    const session = await getSession();
+
+    if (session) {
+      setAreInvalid(false);
+      router.push("/");
+    } else if (!session) {
+      setAreInvalid(true);
+    }
   };
 
   const signUp = () => {
