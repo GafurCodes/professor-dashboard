@@ -1,26 +1,60 @@
 import { Button, IconButton } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
-import { Box, Center, Heading, HStack, VStack } from "@chakra-ui/layout";
+import { Box, Center, Heading, HStack, Text, VStack } from "@chakra-ui/layout";
 import { useEffect, useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { signIn, useSession } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 
 import axios from "axios";
+import router from "next/router";
 
 export default function Auth() {
-  const { data, status } = useSession();
+  //tracking of the current session
+  const { status } = useSession();
 
-  useEffect(() => {}, [status, data]);
-  const [showPassword, setShowPassword] = useState(false);
-  const showOnClick = () => setShowPassword(!showPassword);
+  //tracking whether the credentials are invalid
+  const [areInvalid, setAreInvalid] = useState(false);
 
+  //tracking  form inputs
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  //tracking the form type
   const [isSignUp, setIsSignUp] = useState(false);
+
+  //tracking whether the  password showing
+  const [showPassword, setShowPassword] = useState(false);
+  const showOnClick = () => setShowPassword(!showPassword);
+
+  //
+
+  const sucessfulSignUp = () => {
+    setIsSignUp(false);
+    setPassword(""), setEmail("");
+  };
+
+  //
+  const login = () => {
+    signIn("credentials", {
+      email: email,
+      password: password,
+      redirect: false,
+    });
+  };
+
+  //
+  useEffect(() => {
+    login();
+    if (status === "authenticated") {
+      setAreInvalid(false);
+      router.push("/");
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [email, password, status]);
 
   const signUp = () => {
     axios
@@ -30,16 +64,8 @@ export default function Auth() {
         email,
         password,
       })
-
+      .then(() => sucessfulSignUp())
       .catch((err) => console.log(err));
-  };
-
-  const login = () => {
-    signIn("credentials", {
-      email: email,
-      password: password,
-      redirect: false,
-    });
   };
 
   return (
@@ -48,6 +74,7 @@ export default function Auth() {
         <VStack spacing={16}>
           <Heading>{isSignUp ? "Sign Up" : "Login"}</Heading>
           <VStack spacing={"8"} width="400px">
+            {areInvalid ? <Text color="red">Invalid credentials</Text> : null}
             {isSignUp ? (
               <HStack spacing={5}>
                 <FormControl isRequired>
@@ -74,6 +101,7 @@ export default function Auth() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                isInvalid={areInvalid ? true : false}
               />
             </FormControl>
             <FormControl isRequired>
@@ -83,6 +111,7 @@ export default function Auth() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  isInvalid={areInvalid ? true : false}
                 />
                 <InputRightElement>
                   <IconButton
@@ -103,6 +132,7 @@ export default function Auth() {
               onClick={() => {
                 if (!isSignUp) {
                   setIsSignUp(true);
+                  setAreInvalid(false);
                 } else {
                   signUp();
                 }
@@ -113,11 +143,13 @@ export default function Auth() {
             </Button>
             <Button
               variant={isSignUp ? "link" : "solid"}
-              onClick={() => {
+              onClick={async (e) => {
                 if (isSignUp) {
                   setIsSignUp(false);
                 } else {
-                  login();
+                  if (status === "unauthenticated") {
+                    setAreInvalid(true);
+                  }
                 }
               }}
               size="lg"
