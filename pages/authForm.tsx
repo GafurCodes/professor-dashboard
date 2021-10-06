@@ -54,24 +54,20 @@ export default function Auth() {
     setPassword(""), setEmail("");
   };
 
-  //
-  // const login = async () => {
-  //   await signIn("credentials", {
-  //     email: email,
-  //     password: password,
-  //     redirect: false,
-  //   });
-  // };
-
-  //
-  useEffect(() => {
-    if (status === "authenticated") {
-      setAreInvalid(false);
-      router.push("/");
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [email, password, status]);
+  const login = async () => {
+    await signIn("credentials", {
+      email: email,
+      password: password,
+      redirect: false,
+    }).then((res: any) => {
+      if (res?.error === null) {
+        setAreInvalid(false);
+        router.push("/");
+      } else if (res?.error) {
+        setAreInvalid(true);
+      }
+    });
+  };
 
   const signUp = () => {
     axios
@@ -164,21 +160,7 @@ export default function Auth() {
                 if (isSignUp) {
                   setIsSignUp(false);
                 } else {
-                  signIn("credentials", {
-                    email: email,
-                    password: password,
-                    redirect: false,
-                  }).then((res) => {
-                    //@ts-ignore
-                    if (res?.error === null) {
-                      return;
-                      //@ts-ignore
-                    } else if (res?.error) {
-                      setAreInvalid(true);
-                      return;
-                    }
-                    return;
-                  });
+                  login();
                 }
               }}
               size="lg"
