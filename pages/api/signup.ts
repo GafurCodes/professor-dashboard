@@ -2,7 +2,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../lib/prisma";
 import bcrypt from "bcrypt";
-import { saltRounds } from "../../secret";
 
 interface Body {
   firstName: string;
@@ -16,7 +15,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const body: Body = JSON.parse(JSON.stringify(req.body));
-  await bcrypt.hash(body.password, saltRounds, async (err, hash) => {
+  await bcrypt.hash(body.password, 10, async (err, hash) => {
     if (err) {
       res.status(500).send("password hashing error");
     }
