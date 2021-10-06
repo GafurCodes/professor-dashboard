@@ -166,11 +166,8 @@ export default function Auth() {
                     password: password,
                     redirect: false,
                   }).then((res) => {
-                    console.log(res);
-                    //@ts-ignore
                     if (res?.error === null) {
                       return;
-                      //@ts-ignore
                     } else if (res?.error) {
                       setAreInvalid(true);
                     }
