@@ -45,7 +45,7 @@ export default function Auth() {
 
     if (session) {
       setAreInvalid(false);
-      router.push("/");
+      router.push("/dashboard");
     } else if (!session) {
       setAreInvalid(true);
     }
