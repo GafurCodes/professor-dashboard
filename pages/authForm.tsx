@@ -2,7 +2,7 @@ import { Button, IconButton } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Center, Heading, HStack, Text, VStack } from "@chakra-ui/layout";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { getSession, signIn, useSession } from "next-auth/react";
 
@@ -12,6 +12,7 @@ import router from "next/router";
 export default function Auth() {
   //tracking of the current session
   const { status } = useSession();
+  console.log(status);
 
   //tracking whether the credentials are invalid
   const [areInvalid, setAreInvalid] = useState(false);
@@ -31,23 +32,24 @@ export default function Auth() {
 
   //
 
+  //
+
   const sucessfulSignUp = () => {
     setIsSignUp(false);
     setPassword(""), setEmail("");
   };
 
   //
-  const login = () => {
-    signIn("credentials", {
-      email: email,
-      password: password,
-      redirect: false,
-    });
-  };
+  // const login = async () => {
+  //   await signIn("credentials", {
+  //     email: email,
+  //     password: password,
+  //     redirect: false,
+  //   });
+  // };
 
   //
   useEffect(() => {
-    login();
     if (status === "authenticated") {
       setAreInvalid(false);
       router.push("/");
@@ -143,13 +145,21 @@ export default function Auth() {
             </Button>
             <Button
               variant={isSignUp ? "link" : "solid"}
-              onClick={async (e) => {
+              onClick={async () => {
                 if (isSignUp) {
                   setIsSignUp(false);
                 } else {
-                  if (status === "unauthenticated") {
-                    setAreInvalid(true);
-                  }
+                  await signIn("credentials", {
+                    email: email,
+                    password: password,
+                    redirect: false,
+                  }).then((res) => {
+                    if (res.error === null) {
+                      return;
+                    } else if (res.error) {
+                      setAreInvalid(true);
+                    }
+                  });
                 }
               }}
               size="lg"
