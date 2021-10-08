@@ -9,7 +9,7 @@ const Home: NextPage = () => {
   if (status === "unauthenticated") {
     router.push("/api/auth/signin");
   } else if (status === "authenticated") {
-    return <h1>hi user with the email &quot;{data?.user?.email}&quot;</h1>;
+    router.push("/dashboard");
   }
 
   return <h1>loading</h1>;
