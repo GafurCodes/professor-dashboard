@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import { getSession, useSession } from "next-auth/react";
+// import Head from "next/head"; will add later for SEO
+import { useSession } from "next-auth/react";
 import router from "next/router";
 
 const Home: NextPage = () => {
