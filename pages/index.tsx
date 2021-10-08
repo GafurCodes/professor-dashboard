@@ -9,7 +9,7 @@ const Home: NextPage = () => {
   if (status === "unauthenticated") {
     router.push("/api/auth/signin");
   } else if (status === "authenticated") {
-    router.push("/dashboard");
+    router.push("/dashboard/home");
   }
 
   return <h1>loading</h1>;
