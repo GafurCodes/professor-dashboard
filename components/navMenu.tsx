@@ -1,11 +1,34 @@
-interface props {
-  userData: { email: string; firstName: string; lastName: string };
-}
+import { Avatar } from "@chakra-ui/avatar";
+import { Button } from "@chakra-ui/button";
+import { HStack, Text, VStack } from "@chakra-ui/layout";
+import { useSession } from "next-auth/react";
+import router from "next/router";
 
-export default function NavMenu({ userData }: props) {
+export default function NavMenu() {
+  const { data } = useSession();
+  console.log(data);
+  const firstName = data?.token.firstName;
+  const lastName = data?.token.lastName;
+
   return (
-    <h1>
-      hi {userData.firstName} {userData.lastName}
-    </h1>
+    <>
+      <VStack
+        position="absolute"
+        minH="100vh"
+        h="100%"
+        left="0"
+        top="0"
+        minW="15rem"
+        boxShadow="xl"
+      >
+        <HStack>
+          <Avatar name={`${firstName} ${lastName}`} src="to be decided" />
+          <Text>
+            {firstName} {lastName}
+          </Text>
+        </HStack>
+        <Button onClick={() => router.push("/dashboard/scenes")}>Scenes</Button>
+      </VStack>
+    </>
   );
 }
