@@ -23,7 +23,7 @@ export default NextAuth({
         if (match) {
           return user;
         } else {
-          throw new Error("invalid credentials");
+          return null;
         }
       },
     }),
@@ -36,6 +36,18 @@ export default NextAuth({
       if (user) {
         return true;
       }
+    },
+    async jwt({ token, account, user }) {
+      if (account) {
+        token.accessToken = account.access_token;
+        token.firstName = user.firstName;
+        token.lastName = user.lastName;
+      }
+      return token;
+    },
+    async session({ session, token, user }) {
+      session.token = token;
+      return session;
     },
   },
 });
