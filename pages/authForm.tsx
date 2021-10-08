@@ -26,10 +26,6 @@ export default function Auth() {
   const [showPassword, setShowPassword] = useState(false);
   const showOnClick = () => setShowPassword(!showPassword);
 
-  //
-
-  //
-
   const sucessfulSignUp = () => {
     setIsSignUp(false);
     setPassword(""), setEmail("");
@@ -45,7 +41,7 @@ export default function Auth() {
 
     if (session) {
       setAreInvalid(false);
-      router.push("/dashboard");
+      router.push("/dashboard/home");
     } else if (!session) {
       setAreInvalid(true);
     }
