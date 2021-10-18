@@ -29,7 +29,7 @@ export default NextAuth({
     }),
   ],
   pages: {
-    signIn: "/authForm",
+    signIn: "/auth/signIn",
   },
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
