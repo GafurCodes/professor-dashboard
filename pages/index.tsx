@@ -2,9 +2,10 @@ import type { NextPage } from "next";
 // import Head from "next/head"; will add later for SEO
 import { useSession } from "next-auth/react";
 import router from "next/router";
+import LoadingSpinner from "../components/loadingSpinner";
 
 const Home: NextPage = () => {
-  const { data, status } = useSession();
+  const { status } = useSession();
 
   if (status === "unauthenticated") {
     router.push("/api/auth/signin");
@@ -12,7 +13,7 @@ const Home: NextPage = () => {
     router.push("/dashboard/home");
   }
 
-  return <h1>loading</h1>;
+  return <LoadingSpinner />;
 };
 
 export default Home;
