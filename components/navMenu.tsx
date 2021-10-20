@@ -11,24 +11,24 @@ export default function NavMenu() {
   const lastName = data?.token.lastName;
 
   return (
-    <>
-      <VStack
-        position="absolute"
-        minH="100vh"
-        h="100%"
-        left="0"
-        top="0"
-        minW="17vw"
-        boxShadow="xl"
-      >
-        <HStack>
-          <Avatar name={`${firstName} ${lastName}`} src="to be decided" />
-          <Text>
-            {firstName} {lastName}
-          </Text>
-        </HStack>
-        <Button onClick={() => router.push("/dashboard/scenes")}>Scenes</Button>
-      </VStack>
-    </>
+    <VStack
+      mt="1rem"
+      position="absolute"
+      minH="100vh"
+      h="100%"
+      left="0"
+      top="0"
+      minW="17vw"
+      boxShadow="xl"
+      spacing={10}
+    >
+      <HStack>
+        <Avatar name={`${firstName} ${lastName}`} src="to be decided" />
+        <Text>
+          {firstName} {lastName}
+        </Text>
+      </HStack>
+      <Button onClick={() => router.push("/dashboard/scenes")}>Scenes</Button>
+    </VStack>
   );
 }
