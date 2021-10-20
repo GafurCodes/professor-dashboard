@@ -3,9 +3,9 @@ import { useSession } from "next-auth/react";
 import AccessDenied from "../../components/accessDenied";
 
 export default function Dashboard() {
-  const { data } = useSession();
+  const { data: session, status } = useSession();
 
-  if (!data?.token) {
+  if (status === "unauthenticated") {
     return <AccessDenied />;
   }
   return (
