@@ -18,7 +18,7 @@ export default function NavMenu() {
         h="100%"
         left="0"
         top="0"
-        minW="15rem"
+        minW="17vw"
         boxShadow="xl"
       >
         <HStack>
