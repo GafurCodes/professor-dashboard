@@ -62,6 +62,10 @@ export default function Scenes() {
     onClose: onCloseSceneJson,
   } = useDisclosure();
 
+  if (status === "unauthenticated") {
+    return <AccessDenied />;
+  }
+
   return (
     <Box>
       <Heading textAlign="center">Scenes</Heading>
