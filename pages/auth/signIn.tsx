@@ -3,6 +3,7 @@ import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Center, Heading, HStack, VStack } from "@chakra-ui/layout";
+import { toast, useToast } from "@chakra-ui/toast";
 import { getSession, signIn } from "next-auth/react";
 import router from "next/router";
 import { useRef, useState } from "react";
@@ -13,6 +14,8 @@ export default function SignIn() {
 
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
+
+  const invalidCredentialsToast = useToast();
 
   const login = async () => {
     await signIn("credentials", {
@@ -28,6 +31,13 @@ export default function SignIn() {
       router.push("/dashboard/home");
     } else if (!session) {
       setInvalidCredentials(true);
+      invalidCredentialsToast({
+        title: "Invalid credentials.",
+        description: "Incorrect email or password.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
