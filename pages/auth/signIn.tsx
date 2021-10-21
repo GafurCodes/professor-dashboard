@@ -3,7 +3,7 @@ import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Center, Heading, HStack, VStack } from "@chakra-ui/layout";
-import { toast, useToast } from "@chakra-ui/toast";
+import { useToast } from "@chakra-ui/toast";
 import { getSession, signIn } from "next-auth/react";
 import router from "next/router";
 import { useRef, useState } from "react";
@@ -46,7 +46,7 @@ export default function SignIn() {
       <Box boxShadow="md" borderRadius="2xl" padding={20}>
         <VStack spacing={16}>
           <Heading>Sign In</Heading>
-          <VStack spacing={"8"} width="400px">
+          <VStack spacing={8} width="25rem">
             <FormControl isRequired>
               <FormLabel>Email</FormLabel>
               <Input type="email" ref={email} isInvalid={invalidCredentials} />
