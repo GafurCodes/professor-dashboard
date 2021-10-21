@@ -10,7 +10,7 @@ import router from "next/router";
 import { useToast } from "@chakra-ui/react";
 
 export default function SignUp() {
-  //making Typescript happy. Without this interface tt assumes that the "status" property is a string, when it has to be an enum according to ChakraUI.
+  //making Typescript happy. Without this interface it assumes that the "status" property is a string, when it has to be an enum according to ChakraUI.
   interface toastConfig {
     id?: string;
     title: string;
@@ -145,8 +145,8 @@ export default function SignUp() {
       <Box boxShadow="md" borderRadius="2xl" padding={20}>
         <VStack spacing={16}>
           <Heading>Sign Up</Heading>
-          <VStack spacing={"8"} width="400px">
-            <HStack spacing={5}>
+          <VStack spacing={8} width="25rem">
+            <HStack spacing={10}>
               <FormControl isRequired>
                 <FormLabel>First Name</FormLabel>
                 <Input
