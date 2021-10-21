@@ -62,11 +62,8 @@ export default function Scenes() {
     onClose: onCloseSceneJson,
   } = useDisclosure();
 
-  if (status === "unauthenticated") {
-    return <AccessDenied />;
-  }
   return (
-    <Box ml="20vw" maxWidth="80vw">
+    <Box>
       <Heading textAlign="center">Scenes</Heading>
       <Button onClick={onOpenSceneInfo} colorScheme="green">
         Add Scene
