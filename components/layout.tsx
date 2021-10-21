@@ -1,5 +1,7 @@
 import { chakra } from "@chakra-ui/system";
 import { useSession } from "next-auth/react";
+import router from "next/router";
+import AccessDenied from "./accessDenied";
 import LoadingSpinner from "./loadingSpinner";
 import NavMenu from "./navMenu";
 
@@ -13,10 +15,6 @@ export default function Layout({ children }: { children: JSX.Element }) {
         <chakra.main ml="17rem">{children}</chakra.main>
       </>
     );
-  }
-
-  if (status === "loading") {
-    return <LoadingSpinner />;
   }
 
   return <chakra.main>{children}</chakra.main>;
