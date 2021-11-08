@@ -18,6 +18,7 @@ model User {
   password      String
   sessions      Session[]
   createdAt     DateTime  @default(now())
+  scenes        Scene[]
 }
 
 model Session {
@@ -29,4 +30,20 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Scene {
+  id                        String   @id @default(cuid())
+  name                      String
+  description               String
+  fireExtinguisher          Boolean
+  interactivePeriodicTable  Boolean
+  broom                     Boolean
+  eyeWashingStation         Boolean
+  scales                    Boolean
+  fumeHood                  Boolean
+  flask                     Boolean
+  chemistrySet              Boolean
+  userId                    String
+  user                      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+}
 
