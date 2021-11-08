@@ -3,17 +3,13 @@ import { Scene } from ".prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../lib/prisma";
 
-type Data = {
-  scenes: Scene[];
-};
-
 interface Body {
   email: string;
 }
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
   const body: Body = JSON.parse(JSON.stringify(req.body));
 
@@ -25,6 +21,6 @@ export default async function handler(
   try {
     res.status(200).json({ scenes: user!.scenes });
   } catch (error) {
-    console.log(error);
+    res.send(error);
   }
 }
