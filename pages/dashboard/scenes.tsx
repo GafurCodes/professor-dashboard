@@ -389,7 +389,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let newScenes;
 
   await axios
-    .post("http://localhost:3000/api/getAllScenes", {
+    .post("/api/getAllScenes", {
       email: session?.user?.email,
     })
     .then((res) => (newScenes = res.data));
