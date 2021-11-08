@@ -389,7 +389,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let newScenes;
 
   await axios
-    .post("/api/getAllScenes", {
+    .post("https://professor-dashboard.vercel.app/api/getAllScenes", {
       email: session?.user?.email,
     })
     .then((res) => (newScenes = res.data));
