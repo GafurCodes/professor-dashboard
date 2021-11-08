@@ -30,6 +30,7 @@ import { Textarea } from "@chakra-ui/react";
 import axios from "axios";
 import { GetServerSideProps } from "next";
 
+//@ts-ignore
 export default function Scenes({ fetchedScenes: { scenes } }) {
   interface scene {
     id: string;
@@ -209,16 +210,38 @@ export default function Scenes({ fetchedScenes: { scenes } }) {
       <Flex wrap="wrap" flexDirection="row" mt="1rem" width="80vw">
         {scenes.map(
           ({
+            //@ts-ignore
+
             name,
+            //@ts-ignore
+
             description,
+            //@ts-ignore
+
             fireExtinguisher,
+            //@ts-ignore
+
             interactivePeriodicTable,
+            //@ts-ignore
+
             broom,
+            //@ts-ignore
+
             eyeWashingStation,
+            //@ts-ignore
+
             scales,
+            //@ts-ignore
+
             fumeHood,
+            //@ts-ignore
+
             flask,
+            //@ts-ignore
+
             chemistrySet,
+            //@ts-ignore
+
             id,
           }) => (
             <VStack
@@ -327,6 +350,8 @@ export default function Scenes({ fetchedScenes: { scenes } }) {
                     const grandParentId = parentId?.parentElement?.id;
 
                     setCurrentSceneOpen(() =>
+                      //@ts-ignore
+
                       scenes.find((scene) => scene.id === grandParentId)
                     );
                     onOpenSceneJson();
