@@ -8,7 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/layout";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import AccessDenied from "../../components/accessDenied";
 import { v4 as uuidv4 } from "uuid";
@@ -28,8 +28,9 @@ import { useDisclosure } from "@chakra-ui/hooks";
 import { Input } from "@chakra-ui/input";
 import { Textarea } from "@chakra-ui/react";
 import axios from "axios";
+import { GetServerSideProps } from "next";
 
-export default function Scenes() {
+export default function Scenes({ fetchedScenes: { scenes } }) {
   interface scene {
     id: string;
     sceneName: string;
@@ -45,8 +46,6 @@ export default function Scenes() {
   }
 
   const { data: session, status } = useSession();
-
-  const [scenes, setScenes] = useState<scene[]>([]);
 
   const sceneName = useRef<HTMLInputElement>(null);
   const sceneDesc = useRef<HTMLTextAreaElement>(null);
@@ -166,25 +165,6 @@ export default function Scenes() {
                     chemistrySet: chemistrySet.current!.checked,
                   });
                   onCloseSceneInfo();
-                  setScenes((oldArr) => {
-                    return [
-                      {
-                        id: `${sceneName.current?.value} ${sceneDesc.current?.value}`,
-                        sceneName: `${sceneName.current?.value}`,
-                        description: `${sceneDesc.current?.value}`,
-                        fireExtinguisher: fireExtinguisher.current!.checked,
-                        interactivePeriodicTable:
-                          interactivePeriodicTable.current!.checked,
-                        broom: broom.current!.checked,
-                        eyeWashingStation: eyeWashingStation.current!.checked,
-                        scales: scales.current!.checked,
-                        fumeHood: fumeHood.current!.checked,
-                        flask: flask.current!.checked,
-                        chemistrySet: chemistrySet.current!.checked,
-                      },
-                      ...oldArr,
-                    ];
-                  });
                 }}
               >
                 Add Scene
@@ -229,7 +209,7 @@ export default function Scenes() {
       <Flex wrap="wrap" flexDirection="row" mt="1rem" width="80vw">
         {scenes.map(
           ({
-            sceneName,
+            name,
             description,
             fireExtinguisher,
             interactivePeriodicTable,
@@ -239,12 +219,13 @@ export default function Scenes() {
             fumeHood,
             flask,
             chemistrySet,
+            id,
           }) => (
             <VStack
               key={uuidv4()}
               alignItems="flex-start"
               flexWrap="wrap"
-              id={`${sceneName} ${description}`}
+              id={id}
               mt="1rem"
               mb="1rem"
               boxShadow="xs"
@@ -252,7 +233,7 @@ export default function Scenes() {
               borderRadius="1rem"
               minW="78vw"
             >
-              <Heading>{sceneName}</Heading>
+              <Heading>{name}</Heading>
               <Text mt="1rem" mb="1rem">
                 {description}
               </Text>
@@ -360,9 +341,9 @@ export default function Scenes() {
                     const parentId = target.parentElement;
                     const grandParentId = parentId?.parentElement?.id;
 
-                    setScenes((oldScenes) =>
-                      oldScenes.filter((scene) => scene.id != grandParentId)
-                    );
+                    // setScenes((oldScenes) =>
+                    //   oldScenes.filter((scene) => scene.id != grandParentId)
+                    // );
                   }}
                   colorScheme="red"
                 >
@@ -376,3 +357,19 @@ export default function Scenes() {
     </Box>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+
+  let newScenes;
+
+  await axios
+    .post("http://localhost:3000/api/getAllScenes", {
+      email: session?.user?.email,
+    })
+    .then((res) => (newScenes = res.data));
+
+  return {
+    props: { fetchedScenes: newScenes },
+  };
+};
