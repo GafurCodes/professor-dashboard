@@ -9,7 +9,7 @@ import {
   VStack,
 } from "@chakra-ui/layout";
 import { useSession } from "next-auth/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AccessDenied from "../../components/accessDenied";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -27,15 +27,21 @@ import {
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Input } from "@chakra-ui/input";
 import { Textarea } from "@chakra-ui/react";
+import axios from "axios";
 
 export default function Scenes() {
   interface scene {
     id: string;
     sceneName: string;
-    sceneDesc: string | undefined;
-    includeTrashcan: boolean;
-    hydrogenPeroxide: boolean;
-    alcohol: boolean;
+    description: string;
+    fireExtinguisher: boolean;
+    interactivePeriodicTable: boolean;
+    broom: boolean;
+    eyeWashingStation: boolean;
+    scales: boolean;
+    fumeHood: boolean;
+    flask: boolean;
+    chemistrySet: boolean;
   }
 
   const { data: session, status } = useSession();
@@ -44,9 +50,14 @@ export default function Scenes() {
 
   const sceneName = useRef<HTMLInputElement>(null);
   const sceneDesc = useRef<HTMLTextAreaElement>(null);
-  const incluldeTrashcan = useRef<HTMLInputElement>(null);
-  const hydrogenPeroxide = useRef<HTMLInputElement>(null);
-  const alcohol = useRef<HTMLInputElement>(null);
+  const fireExtinguisher = useRef<HTMLInputElement>(null);
+  const interactivePeriodicTable = useRef<HTMLInputElement>(null);
+  const broom = useRef<HTMLInputElement>(null);
+  const eyeWashingStation = useRef<HTMLInputElement>(null);
+  const scales = useRef<HTMLInputElement>(null);
+  const fumeHood = useRef<HTMLInputElement>(null);
+  const flask = useRef<HTMLInputElement>(null);
+  const chemistrySet = useRef<HTMLInputElement>(null);
 
   const [currentSceneOpen, setCurrentSceneOpen] = useState<scene>();
 
@@ -95,14 +106,34 @@ export default function Scenes() {
             </VStack>
 
             <Flex wrap="wrap">
-              <Checkbox mr="1rem" mt="1rem" size="lg" ref={incluldeTrashcan}>
-                Include Trashcan
+              <Checkbox mr="1rem" mt="1rem" size="lg" ref={fireExtinguisher}>
+                Fire Extinguisher
               </Checkbox>
-              <Checkbox mr="1rem" mt="1rem" size="lg" ref={hydrogenPeroxide}>
-                Hydrogen Peroxide
+              <Checkbox
+                mr="1rem"
+                mt="1rem"
+                size="lg"
+                ref={interactivePeriodicTable}
+              >
+                Interactive Periodic Table
               </Checkbox>
-              <Checkbox mr="1rem" mt="1rem" size="lg" ref={alcohol}>
-                Alcohol
+              <Checkbox mr="1rem" mt="1rem" size="lg" ref={broom}>
+                Broom
+              </Checkbox>
+              <Checkbox mr="1rem" mt="1rem" size="lg" ref={eyeWashingStation}>
+                Eye Washing Station
+              </Checkbox>
+              <Checkbox mr="1rem" mt="1rem" size="lg" ref={scales}>
+                Scales
+              </Checkbox>
+              <Checkbox mr="1rem" mt="1rem" size="lg" ref={fumeHood}>
+                Fume Hood
+              </Checkbox>
+              <Checkbox mr="1rem" mt="1rem" size="lg" ref={flask}>
+                Flask
+              </Checkbox>
+              <Checkbox mr="1rem" mt="1rem" size="lg" ref={chemistrySet}>
+                Chemistry Set
               </Checkbox>
             </Flex>
           </ModalBody>
@@ -119,29 +150,40 @@ export default function Scenes() {
               </Button>
               <Button
                 colorScheme="green"
-                onClick={() => {
+                onClick={async () => {
+                  await axios.post("/api/addScene", {
+                    email: session?.user?.email,
+                    sceneName: `${sceneName.current?.value}`,
+                    description: `${sceneDesc.current?.value}`,
+                    fireExtinguisher: fireExtinguisher.current!.checked,
+                    interactivePeriodicTable:
+                      interactivePeriodicTable.current!.checked,
+                    broom: broom.current!.checked,
+                    eyeWashingStation: eyeWashingStation.current!.checked,
+                    scales: scales.current!.checked,
+                    fumeHood: fumeHood.current!.checked,
+                    flask: flask.current!.checked,
+                    chemistrySet: chemistrySet.current!.checked,
+                  });
                   onCloseSceneInfo();
                   setScenes((oldArr) => {
-                    if (
-                      !sceneName.current?.value ||
-                      !incluldeTrashcan.current ||
-                      !hydrogenPeroxide.current ||
-                      !alcohol.current
-                    ) {
-                      return [...oldArr];
-                    } else {
-                      return [
-                        {
-                          id: `${sceneName.current?.value} ${sceneDesc.current?.value}`,
-                          sceneName: sceneName.current?.value,
-                          sceneDesc: sceneDesc.current?.value,
-                          includeTrashcan: incluldeTrashcan.current?.checked,
-                          hydrogenPeroxide: hydrogenPeroxide.current?.checked,
-                          alcohol: alcohol.current?.checked,
-                        },
-                        ...oldArr,
-                      ];
-                    }
+                    return [
+                      {
+                        id: `${sceneName.current?.value} ${sceneDesc.current?.value}`,
+                        sceneName: `${sceneName.current?.value}`,
+                        description: `${sceneDesc.current?.value}`,
+                        fireExtinguisher: fireExtinguisher.current!.checked,
+                        interactivePeriodicTable:
+                          interactivePeriodicTable.current!.checked,
+                        broom: broom.current!.checked,
+                        eyeWashingStation: eyeWashingStation.current!.checked,
+                        scales: scales.current!.checked,
+                        fumeHood: fumeHood.current!.checked,
+                        flask: flask.current!.checked,
+                        chemistrySet: chemistrySet.current!.checked,
+                      },
+                      ...oldArr,
+                    ];
                   });
                 }}
               >
@@ -188,16 +230,21 @@ export default function Scenes() {
         {scenes.map(
           ({
             sceneName,
-            sceneDesc,
-            includeTrashcan,
-            hydrogenPeroxide,
-            alcohol,
+            description,
+            fireExtinguisher,
+            interactivePeriodicTable,
+            broom,
+            eyeWashingStation,
+            scales,
+            fumeHood,
+            flask,
+            chemistrySet,
           }) => (
             <VStack
-              key={`${uuidv4()}`}
+              key={uuidv4()}
               alignItems="flex-start"
               flexWrap="wrap"
-              id={`${sceneName} ${sceneDesc}`}
+              id={`${sceneName} ${description}`}
               mt="1rem"
               mb="1rem"
               boxShadow="xs"
@@ -207,36 +254,88 @@ export default function Scenes() {
             >
               <Heading>{sceneName}</Heading>
               <Text mt="1rem" mb="1rem">
-                {sceneDesc}
+                {description}
               </Text>
 
               <Flex wrap="wrap" justifyContent="flex-start">
                 <Checkbox
                   isReadOnly
-                  isChecked={includeTrashcan}
+                  isChecked={fireExtinguisher}
                   mr="1rem"
                   mt="1rem"
                   mb="1rem"
                 >
-                  Trascan Included
+                  Fire Extinguisher
                 </Checkbox>
+
                 <Checkbox
                   isReadOnly
-                  isChecked={hydrogenPeroxide}
+                  isChecked={interactivePeriodicTable}
                   mr="1rem"
                   mt="1rem"
                   mb="1rem"
                 >
-                  Start With Hydrogen Peroxide
+                  Interactive Periodic Table
                 </Checkbox>
+
                 <Checkbox
                   isReadOnly
-                  isChecked={alcohol}
+                  isChecked={broom}
                   mr="1rem"
                   mt="1rem"
                   mb="1rem"
                 >
-                  Disable Alcohol
+                  Broom
+                </Checkbox>
+
+                <Checkbox
+                  isReadOnly
+                  isChecked={eyeWashingStation}
+                  mr="1rem"
+                  mt="1rem"
+                  mb="1rem"
+                >
+                  Eye Washing Station
+                </Checkbox>
+
+                <Checkbox
+                  isReadOnly
+                  isChecked={scales}
+                  mr="1rem"
+                  mt="1rem"
+                  mb="1rem"
+                >
+                  Scales
+                </Checkbox>
+
+                <Checkbox
+                  isReadOnly
+                  isChecked={fumeHood}
+                  mr="1rem"
+                  mt="1rem"
+                  mb="1rem"
+                >
+                  Fume Hood
+                </Checkbox>
+
+                <Checkbox
+                  isReadOnly
+                  isChecked={flask}
+                  mr="1rem"
+                  mt="1rem"
+                  mb="1rem"
+                >
+                  Flask
+                </Checkbox>
+
+                <Checkbox
+                  isReadOnly
+                  isChecked={chemistrySet}
+                  mr="1rem"
+                  mt="1rem"
+                  mb="1rem"
+                >
+                  Chemistry Set
                 </Checkbox>
               </Flex>
               <HStack spacing={5}>
