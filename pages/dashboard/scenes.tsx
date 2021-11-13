@@ -369,11 +369,11 @@ export default function Scenes({ fetchedScenes: { scenes } }) {
                   View Json
                 </Button>
                 <Button
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     const target = e.currentTarget;
                     const parentId = target.parentElement;
                     const grandParentId = parentId?.parentElement?.id;
-                    axios.post("/api/deleteScene", {
+                    await axios.post("/api/deleteScene", {
                       sceneId: grandParentId,
                     });
 
