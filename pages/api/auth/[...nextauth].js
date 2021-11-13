@@ -32,11 +32,11 @@ export default NextAuth({
     signIn: "/auth/signIn",
   },
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      if (user) {
-        return true;
-      }
-    },
+    // async signIn({ user, account, profile, email, credentials }) {
+    //   if (user) {
+    //     return true;
+    //   }
+    // },
     async jwt({ token, account, user }) {
       if (account) {
         token.accessToken = account.access_token;
