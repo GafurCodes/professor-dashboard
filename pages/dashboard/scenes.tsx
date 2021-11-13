@@ -1,4 +1,5 @@
 import { Button } from "@chakra-ui/button";
+import { useRouter } from "next/router";
 import {
   Box,
   Code,
@@ -45,6 +46,12 @@ export default function Scenes({ fetchedScenes: { scenes } }) {
     flask: boolean;
     chemistrySet: boolean;
   }
+
+  const router = useRouter();
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
 
   const { data: session, status } = useSession();
 
@@ -165,6 +172,7 @@ export default function Scenes({ fetchedScenes: { scenes } }) {
                     flask: flask.current!.checked,
                     chemistrySet: chemistrySet.current!.checked,
                   });
+                  refreshData();
                   onCloseSceneInfo();
                 }}
               >
@@ -365,10 +373,11 @@ export default function Scenes({ fetchedScenes: { scenes } }) {
                     const target = e.currentTarget;
                     const parentId = target.parentElement;
                     const grandParentId = parentId?.parentElement?.id;
+                    axios.post("http://localhost:3000/api/deleteScene", {
+                      sceneId: grandParentId,
+                    });
 
-                    // setScenes((oldScenes) =>
-                    //   oldScenes.filter((scene) => scene.id != grandParentId)
-                    // );
+                    refreshData();
                   }}
                   colorScheme="red"
                 >
@@ -388,6 +397,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   let newScenes;
 
+  //https://professor-dashboard.vercel.app/api/getAllScenes
+  //http://localhost:3000/api/getAllScenes
   await axios
     .post("https://professor-dashboard.vercel.app/api/getAllScenes", {
       email: session?.user?.email,
