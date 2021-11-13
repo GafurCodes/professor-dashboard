@@ -373,7 +373,7 @@ export default function Scenes({ fetchedScenes: { scenes } }) {
                     const target = e.currentTarget;
                     const parentId = target.parentElement;
                     const grandParentId = parentId?.parentElement?.id;
-                    axios.post("http://localhost:3000/api/deleteScene", {
+                    axios.post("/api/deleteScene", {
                       sceneId: grandParentId,
                     });
 
@@ -400,7 +400,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   //https://professor-dashboard.vercel.app/api/getAllScenes
   //http://localhost:3000/api/getAllScenes
   await axios
-    .post("https://professor-dashboard.vercel.app/api/getAllScenes", {
+    .post("/api/getAllScenes", {
       email: session?.user?.email,
     })
     .then((res) => (newScenes = res.data));
