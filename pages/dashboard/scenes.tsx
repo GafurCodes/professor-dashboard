@@ -400,7 +400,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   //https://professor-dashboard.vercel.app/api/getAllScenes
   //http://localhost:3000/api/getAllScenes
   await axios
-    .post("/api/getAllScenes", {
+    .post("https://professor-dashboard.vercel.app/api/getAllScenes", {
       email: session?.user?.email,
     })
     .then((res) => (newScenes = res.data));
