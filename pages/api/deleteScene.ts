@@ -6,9 +6,15 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const sceneId = req.body.sceneId;
-  await prisma.scene.delete({
-    where: {
-      id: sceneId,
-    },
-  });
+  try {
+    await prisma.scene.delete({
+      where: {
+        id: sceneId,
+      },
+    });
+    res.status(200).send("scene deleted");
+  } catch (error) {
+    console.log(error);
+    res.send(error);
+  }
 }
